@@ -8,9 +8,11 @@
     <View
         android:id="@+id/challenge_add_appbar"
         android:layout_width="410dp"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="317dp"
         android:background="#D8D8D8"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/btn_challenge_date_365"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -128,21 +130,6 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/btn_challenge_date_365"
-        android:layout_width="329dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="17dp"
-        android:text="365일"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:backgroundTint="#878787"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_add_challenge_date" />
-
-    <Button
         android:id="@+id/btn_add_cancel"
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -187,7 +174,7 @@
         app:layout_constraintTop_toBottomOf="@+id/input_add_challenge_name"
         tools:visibility="visible" />
 
-    <TextView
+    <EditText
         android:id="@+id/input_add_challenge_name"
         android:layout_width="330dp"
         android:layout_height="40dp"
@@ -205,21 +192,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/linear_add_1"
-        android:layout_width="330dp"
-        android:layout_height="3dp"
+    <RadioButton
+        android:id="@+id/btn_challenge_date_30"
+        android:layout_width="0dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:editable="true"
+        android:text="30일"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_challenge_date_365"
+        app:layout_constraintEnd_toEndOf="@+id/btn_challenge_date_365"
+        app:layout_constraintStart_toStartOf="@+id/btn_challenge_date_365"
+        app:layout_constraintTop_toBottomOf="@+id/label_add_challenge_date"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <RadioButton
+        android:id="@+id/btn_challenge_date_365"
+        android:layout_width="170dp"
+        android:layout_height="0dp"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="39dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:background="#353535"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="288dp"
+        android:clickable="true"
+        android:editable="true"
+        android:text="365일"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/input_add_challenge_name" />
+        app:layout_constraintTop_toBottomOf="@+id/challenge_add_appbar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
