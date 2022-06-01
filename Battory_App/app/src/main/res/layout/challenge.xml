@@ -5,147 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/challenge_add_appbar3"
-        android:layout_width="410dp"
-        android:layout_height="60dp"
-        android:background="#D8D8D8"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/challenge_add_btn_home"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="278dp"
-        android:layout_marginRight="278dp"
-        android:layout_marginBottom="10dp"
-        android:background="#656565"
-        android:editable="true"
-        app:backgroundTint="#656565"
-        app:icon="@drawable/icon_home"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:iconSize="50dp"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/challenge_add_appbar"
-        app:layout_constraintEnd_toStartOf="@+id/challenge_add_btn_config"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6"
-        tools:visibility="visible" />
-
-
-    <Button
-        android:id="@+id/challenge_add_btn_info3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="96dp"
-        android:layout_marginRight="96dp"
-        android:background="#656565"
-        app:backgroundTint="#656565"
-        app:icon="@drawable/icon_info"
-        app:iconGravity="textEnd"
-        app:iconPadding="0dp"
-        app:iconSize="50dp"
-        app:iconTint="#303030"
-        app:layout_constraintBottom_toBottomOf="@+id/challenge_add_btn_delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/challenge_add_btn_delete"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/challenge_add_btn_config3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginRight="14dp"
-        android:background="#656565"
-        app:backgroundTint="#656565"
-        app:icon="@drawable/icon_config"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/challenge_add_btn_info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/challenge_add_btn_delete"
-        app:layout_constraintTop_toTopOf="@+id/challenge_add_btn_info"
-        app:layout_constraintVertical_bias="0.0"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/challenge_add_btn_add3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:background="#656565"
-        app:backgroundTint="#656565"
-        app:icon="@drawable/icon_add"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/challenge_add_btn_home"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/challenge_add_btn_home"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/challenge_add_btn_delete3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="180dp"
-        android:layout_marginLeft="180dp"
-        android:layout_marginEnd="116dp"
-        android:layout_marginRight="116dp"
-        android:background="#656565"
-        app:backgroundTint="#656565"
-        app:icon="@drawable/icon_delete"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/challenge_add_btn_add"
-        app:layout_constraintEnd_toStartOf="@+id/challenge_add_btn_config"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/challenge_add_btn_add"
-        app:layout_constraintVertical_bias="0.0"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="190dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:text="챌린지 명"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="70dp"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="190dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:text="완성도:"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="207dp"
-        tools:layout_editor_absoluteY="70dp"
-        tools:visibility="visible" />
-
 
     <TableLayout
         android:id="@+id/tableLayout3"
-        android:layout_width="410dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         tools:ignore="MissingConstraints">
 
         <TableRow>
@@ -153,21 +21,114 @@
 
             <Button
                 android:id="@+id/add_picture"
-                android:layout_width="205dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="사진추가하기"
                 app:backgroundTint="#656565"
-                app:layout_constraintBaseline_toBaselineOf="@+id/button2"
+                app:layout_constraintBaseline_toBaselineOf="@+id/button2" />
 
             <Button
                 android:id="@+id/entire_chal"
-                android:layout_width="205dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="전체 챌린지 보기"
                 app:backgroundTint="#D8D8D8" />
 
         </TableRow>
     </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="58dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/challenge_name"
+                android:layout_width="205dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:text="챌린지 명"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/challenge_complete_rate"
+                android:layout_width="205dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:text="완성도:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints"
+                tools:visibility="visible" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="410dp"
+        android:layout_height="571dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="93dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+<!--            <ImageView-->
+<!--                android:id="@+id/challenge_image"-->
+<!--                android:layout_width="380dp"-->
+<!--                android:layout_height="400dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/pikachu_inapp" />-->
+            <com.example.battory_app.ZoomableImage
+                android:id="@+id/challenge_zoom_image"
+                android:layout_width="950px"
+                android:layout_height="1000px"
+                android:background="@drawable/image_border"/>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="114dp" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

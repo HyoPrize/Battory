@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Battory_App</string>
     <string name="label_login_title">회원 로그인</string>
+    <string name="title_activity_challenge">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
