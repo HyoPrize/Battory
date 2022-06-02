@@ -1,83 +1,97 @@
-//package com.example.battory_app
-//import androidx.appcompat.app.AppCompatActivity
-//import android.os.Bundle
-//import android.widget.Toast
-//import com.example.battory_app.databinding.LoginBinding
-//
-//class MainActivity : AppCompatActivity() {
-//    private var mBinding: LoginBinding? = null
-//    private val binding get() = mBinding!!
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        mBinding = LoginBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//    }
-//}
-
 package com.example.battory_app
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.example.battory_app.databinding.LoginBinding
+import com.example.battory_app.databinding.PageChallengeAddBinding
+import com.example.battory_app.databinding.PageChallengeDeleteBinding
+import org.json.JSONObject
+import org.json.JSONArray
+import java.io.*
 
 class MainActivity : AppCompatActivity() {
     val TAG: String = "MainActivity"
 
-    private var mBinding: LoginBinding? = null
-    private val binding get() = mBinding!!
+    private var mLogin: LoginBinding? = null
+    private val Login get() = mLogin!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login)
-        mBinding = LoginBinding.inflate(layoutInflater)
+        mLogin = LoginBinding.inflate(layoutInflater)
 
-        setContentView(binding.root)
+        val jsonString = assets.open("LoginData.json").reader().readText()
+        val jsonArray = JSONArray(jsonString)
+        val jsonObject = jsonArray.getJSONObject(0)
 
-        binding.btnLogin.setOnClickListener {
+        var jsonId = jsonObject.getString("ID")
+        var jsonPw = jsonObject.getString("PW")
+        var jsonSuccess = jsonObject.getBoolean("Success")
+        var jsonChallengeExist = jsonObject.getBoolean("ChallengeExist")
 
-            //editText로부터 입력된 값을 받아온다
-            var id = binding.inputId.toString()
-            var pw = binding.inputPassword.text.toString()
+        if (!jsonSuccess){
+            setContentView(Login.root)
+        }
+        else {
+            if(jsonChallengeExist)
+            {
+                val intent = Intent(this, ChallengeActivity::class.java)
+                startActivity(intent)
+            }
+            else
+            {
+                val intent = Intent(this, ChallengeAddActivity::class.java)
+                startActivity(intent)
+            }
+        }
 
-            // 쉐어드로부터 저장된 id, pw 가져오기
-            val sharedPreference = getSharedPreferences("file name", MODE_PRIVATE)
-            val savedId = sharedPreference.getString("id", "")
-            val savedPw = sharedPreference.getString("pw", "")
+        Login.btnLogin.setOnClickListener {
+            var id: String = Login.inputId.text.toString()
+            var pw: String = Login.inputPassword.text.toString()
 
-            // 유저가 입력한 id, pw값과 쉐어드로 불러온 id, pw값 비교
-            if(id == savedId && pw == savedPw){
+            if(id == jsonId && pw == jsonPw){
                 // 로그인 성공 다이얼로그 보여주기
-                dialog("success")
+                dialog("login_success")
+                jsonObject.put("Success", true)
+
+                if(jsonChallengeExist)
+                {
+                    val intent = Intent(this, ChallengeActivity::class.java)
+                    startActivity(intent)
+                }
+                else
+                {
+                    val intent = Intent(this, ChallengeAddActivity::class.java)
+                    startActivity(intent)
+                }
             }
             else{
                 // 로그인 실패 다이얼로그 보여주기
-                dialog("fail")
+                dialog("login_fail")
             }
         }
 
         // 회원가입 버튼
-        binding.btnJoinMembership.setOnClickListener {
+        Login.btnJoinMembership.setOnClickListener {
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
         }
-
     }
 
     // 로그인 성공/실패 시 다이얼로그를 띄워주는 메소드
     fun dialog(type: String){
         var dialog = AlertDialog.Builder(this)
 
-        if(type.equals("success")){
+        if(type.equals("login_success")){
             dialog.setTitle("로그인 성공")
             dialog.setMessage("로그인 성공!")
         }
-        else if(type.equals("fail")){
+        else if(type.equals("login_fail")){
             dialog.setTitle("로그인 실패")
             dialog.setMessage("아이디와 비밀번호를 확인해주세요")
         }

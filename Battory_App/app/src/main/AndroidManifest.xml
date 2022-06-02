@@ -19,6 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Register" />
+        <activity android:name=".ChallengeAddActivity"/>
+        <activity android:name=".ChallengeDeleteActivity"/>
+        <activity android:name=".ConfigActivity"/>
+        <activity android:name=".InfoActivity"/>
     </application>
 
 </manifest>
