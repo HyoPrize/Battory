@@ -21,23 +21,25 @@ class ConfigActivity : AppCompatActivity() {
         setContentView(challengeConfig.root)
 
         challengeConfig.configBtnHome.setOnClickListener {
-            val intent = Intent(this, ChallengeActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         challengeConfig.configBtnAdd.setOnClickListener {
             val intent = Intent(this, ChallengeAddActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeConfig.configBtnDelete.setOnClickListener {
             val intent = Intent(this, ChallengeDeleteActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeConfig.configBtnInfo.setOnClickListener {
             val intent = Intent(this, InfoActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeConfig.configBtnConfig.setOnClickListener {

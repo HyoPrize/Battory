@@ -21,18 +21,19 @@ class InfoActivity : AppCompatActivity() {
         setContentView(challengeInfo.root)
 
         challengeInfo.infoBtnHome.setOnClickListener {
-            val intent = Intent(this, ChallengeActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         challengeInfo.infoBtnAdd.setOnClickListener {
             val intent = Intent(this, ChallengeAddActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeInfo.infoBtnDelete.setOnClickListener {
             val intent = Intent(this, ChallengeDeleteActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeInfo.infoBtnInfo.setOnClickListener {
@@ -41,6 +42,7 @@ class InfoActivity : AppCompatActivity() {
         challengeInfo.infoBtnConfig.setOnClickListener {
             val intent = Intent(this, ConfigActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

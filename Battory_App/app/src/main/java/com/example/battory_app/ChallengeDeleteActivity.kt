@@ -23,13 +23,13 @@ class ChallengeDeleteActivity : AppCompatActivity() {
         setContentView(challengeDelete.root)
 
         challengeDelete.challengeDeleteBtnHome.setOnClickListener {
-            val intent = Intent(this, ChallengeActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         challengeDelete.challengeDeleteBtnAdd.setOnClickListener {
             val intent = Intent(this, ChallengeAddActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeDelete.challengeDeleteBtnDelete.setOnClickListener {
@@ -38,11 +38,13 @@ class ChallengeDeleteActivity : AppCompatActivity() {
         challengeDelete.challengeDeleteBtnInfo.setOnClickListener {
             val intent = Intent(this, InfoActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeDelete.challengeDeleteBtnConfig.setOnClickListener {
             val intent = Intent(this, ConfigActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

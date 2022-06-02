@@ -71,8 +71,7 @@ class ChallengeAddActivity : AppCompatActivity() {
         })
 
         challengeAdd.challengeAddBtnHome.setOnClickListener {
-            val intent = Intent(this, ChallengeActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         challengeAdd.challengeAddBtnAdd.setOnClickListener {
@@ -81,16 +80,19 @@ class ChallengeAddActivity : AppCompatActivity() {
         challengeAdd.challengeAddBtnDelete.setOnClickListener {
             val intent = Intent(this, ChallengeDeleteActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeAdd.challengeAddBtnInfo.setOnClickListener {
             val intent = Intent(this, InfoActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         challengeAdd.challengeAddBtnConfig.setOnClickListener {
             val intent = Intent(this, ConfigActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

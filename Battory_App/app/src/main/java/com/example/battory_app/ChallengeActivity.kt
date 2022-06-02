@@ -1,6 +1,7 @@
 package com.example.battory_app
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
 import android.util.Log
@@ -72,6 +73,29 @@ class ChallengeActivity : AppCompatActivity() {
         // 챌린지 관련 세팅
         binding.challengeName.text = "오늘까지 개발 끝내기"
         binding.challengeCompleteRate.text = "완성도 : " + doneDay.toString() + "/"+ imageInfo.getString("total_day")
+
+        binding.challengeBtnHome.setOnClickListener {
+        }
+
+        binding.challengeBtnAdd.setOnClickListener {
+            val intent = Intent(this, ChallengeAddActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.challengeBtnDelete.setOnClickListener {
+            val intent = Intent(this, ChallengeDeleteActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.challengeBtnInfo.setOnClickListener {
+            val intent = Intent(this, InfoActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.challengeBtnConfig.setOnClickListener {
+            val intent = Intent(this, ConfigActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
