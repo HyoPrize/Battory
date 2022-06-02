@@ -3,17 +3,13 @@ package com.example.battory_app
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.battory_app.databinding.LoginBinding
-import com.example.battory_app.databinding.PageChallengeAddBinding
-import com.example.battory_app.databinding.PageChallengeDeleteBinding
-import org.json.JSONObject
 import org.json.JSONArray
-import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val TAG: String = "MainActivity"
@@ -25,14 +21,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mLogin = LoginBinding.inflate(layoutInflater)
 
-        val jsonString = assets.open("LoginData.json").reader().readText()
-        val jsonArray = JSONArray(jsonString)
-        val jsonObject = jsonArray.getJSONObject(0)
+        val loginData = assets.open("LoginData.json").reader().readText()
+        val loginDataJsonArray = JSONArray(loginData)
+        val loginDataJsonObject = loginDataJsonArray.getJSONObject(0)
 
-        var jsonId = jsonObject.getString("ID")
-        var jsonPw = jsonObject.getString("PW")
-        var jsonSuccess = jsonObject.getBoolean("Success")
-        var jsonChallengeExist = jsonObject.getBoolean("ChallengeExist")
+        var jsonId = loginDataJsonObject.getString("ID")
+        var jsonPw = loginDataJsonObject.getString("PW")
+        var jsonSuccess = loginDataJsonObject.getBoolean("Success")
+        var jsonChallengeExist = loginDataJsonObject.getBoolean("ChallengeExist")
+
+        val challengeList = assets.open("ChallengeList.json").reader().readText()
+        val challengeListJsonArray = JSONArray(challengeList)
+        val challengeListJsonObject = challengeListJsonArray.getJSONObject(0)
+        var lastAdd = challengeListJsonObject.getString("LastAdd")
 
         if (!jsonSuccess){
             setContentView(Login.root)
@@ -57,11 +58,17 @@ class MainActivity : AppCompatActivity() {
             if(id == jsonId && pw == jsonPw){
                 // 로그인 성공 다이얼로그 보여주기
                 dialog("login_success")
-                jsonObject.put("Success", true)
+                loginDataJsonObject.put("Success", true)
 
                 if(jsonChallengeExist)
                 {
+                    val now = System.currentTimeMillis()
+                    val date = Date(now)
+                    val sdf = SimpleDateFormat("yyyy.MM.dd")
+                    val today: String = sdf.format(date)
+
                     val intent = Intent(this, ChallengeActivity::class.java)
+                    intent.putExtra("isAdd", today == lastAdd)
                     startActivity(intent)
                 }
                 else

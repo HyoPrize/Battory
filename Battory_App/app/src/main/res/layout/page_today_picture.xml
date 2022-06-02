@@ -127,8 +127,8 @@
 
     <TableLayout
         android:id="@+id/tableLayout"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_width="411dp"
+        android:layout_height="52dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/challenge_add_appbar">
@@ -139,43 +139,22 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/challenge_name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/today_picture_name"
+                android:layout_width="400dp"
+                android:layout_height="51dp"
                 android:gravity="center"
-                android:text="현재 챌린지 명 "
+                android:text="오늘의 사진 (%d 일차)"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 tools:ignore="MissingConstraints"
                 tools:visibility="visible" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right">
-
-            <TextView
-                android:id="@+id/challenge_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:gravity="right"
-                android:text="완성도 : ( %d / %d )"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:ignore="MissingConstraints"
-                tools:visibility="visible" />
-
         </TableRow>
     </TableLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="405dp"
-        android:layout_height="0dp"
+        android:layout_width="410dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -187,69 +166,90 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="950px"
             android:orientation="horizontal">
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <!--            <ImageView-->
-            <!--                android:id="@+id/challenge_image"-->
-            <!--                android:layout_width="380dp"-->
-            <!--                android:layout_height="400dp"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:src="@drawable/pikachu_inapp" />-->
-
-            <com.example.battory_app.ZoomableImage
-                android:id="@+id/challenge_zoom_image"
+            <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="950px"
-                android:layout_height="1000px"
-                android:background="@drawable/image_border" />
+                android:layout_height="950px"
+                android:layout_weight="1"
+                android:background="@drawable/image_border"
+                android:scaleType="center"
+                app:srcCompat="@android:drawable/ic_input_add" />
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
+
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
     </LinearLayout>
 
     <TableLayout
-        android:id="@+id/tableLayout3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/tableLayout2"
+        android:layout_width="397dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        tools:ignore="MissingConstraints">
-
-        <TableRow>
-
+        <TableRow
+            android:id="@+id/today_picture_before"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|center_horizontal|center_vertical"
+            tools:visibility="visible">
 
             <Button
-                android:id="@+id/add_picture"
+                android:id="@+id/today_picture_capture"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="사진추가하기"
+                android:layout_height="wrap_content"
+                android:text="사진 찍기" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/today_picture_after"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/today_picture_re_capture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="다시 찍기"
                 app:backgroundTint="#656565" />
 
             <Button
-                android:id="@+id/entire_chal"
-                android:layout_width="112dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="전체 챌린지 보기"
-                app:backgroundTint="#D8D8D8" />
+                android:id="@+id/today_picture_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="사진 저장"
+                app:backgroundTint="#656565" />
 
+            <Button
+                android:id="@+id/today_picture_upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="올리기"
+                app:backgroundTint="#41a541" />
+
+            <Button
+                android:id="@+id/today_picture_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="취소"
+                app:backgroundTint="#ff7878" />
         </TableRow>
+
     </TableLayout>
 
 

@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Battory_App">
-        <activity android:name=".DemoActivity"></activity>
+        <activity android:name=".TodayPictureActivity" />
+        <activity android:name=".DemoActivity" />
         <activity android:name=".ChallengeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -19,10 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Register" />
-        <activity android:name=".ChallengeAddActivity"/>
-        <activity android:name=".ChallengeDeleteActivity"/>
-        <activity android:name=".ConfigActivity"/>
-        <activity android:name=".InfoActivity"/>
+        <activity android:name=".ChallengeAddActivity" />
+        <activity android:name=".ChallengeDeleteActivity" />
+        <activity android:name=".ConfigActivity" />
+        <activity android:name=".InfoActivity" />
     </application>
 
 </manifest>
