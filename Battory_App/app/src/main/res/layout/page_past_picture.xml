@@ -182,13 +182,24 @@
             android:orientation="horizontal">
 
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/past_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/dog" />
+                android:layout_width="950px"
+                android:layout_height="950px"
+                android:layout_weight="1"
+                android:background="@drawable/image_border"
+                android:scaleType="center"
+                app:srcCompat="@android:drawable/ic_input_add" />
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
 
         </LinearLayout>

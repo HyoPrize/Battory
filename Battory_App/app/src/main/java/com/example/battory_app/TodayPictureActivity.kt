@@ -9,20 +9,20 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import com.example.battory_app.databinding.PageTodayPictureBinding
 import java.io.File
 import java.io.FileOutputStream
-import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -77,6 +77,29 @@ class TodayPictureActivity : AppCompatActivity() {
 
         onAddPicture()
 
+        // 사진 클릭
+        binding.todayPicturePreviewImage.setOnClickListener {
+            checkPermissions(PERMISSIONS, PERMISSIONS_REQUEST)
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val photoFile = File(
+                File("${filesDir}/image").apply{
+                    if(!this.exists()){
+                        this.mkdirs()
+                    }
+                },
+                "${mTodayPictureName}.jpg"
+            )
+            photoUri = FileProvider.getUriForFile(
+                this,
+                "com.example.battory_app.fileprovider",
+                photoFile
+            )
+            takePictureIntent.resolveActivity(packageManager)?.also{
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                startActivityForResult(takePictureIntent, CAPTURE)
+            }
+        }
+
         // 사진 찍기 클릭
         binding.todayPictureCapture.setOnClickListener {
             checkPermissions(PERMISSIONS, PERMISSIONS_REQUEST)
@@ -87,7 +110,7 @@ class TodayPictureActivity : AppCompatActivity() {
                         this.mkdirs()
                     }
                 },
-                newJpgFileName()
+                "${mTodayPictureName}.jpg"
             )
             photoUri = FileProvider.getUriForFile(
                 this,
@@ -102,10 +125,9 @@ class TodayPictureActivity : AppCompatActivity() {
 
         // 다시 찍기 클릭
         binding.todayPictureReCapture.setOnClickListener {
-            if(!mPhotoSaved){
-                val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName)
-                imageFile.delete()
-            }
+            val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName)
+            imageFile.delete()
+
             photoUri = null
             mIsAdd = false
             onAddPicture()
@@ -113,19 +135,16 @@ class TodayPictureActivity : AppCompatActivity() {
 
         // 사진 저장 클릭
         binding.todayPictureSave.setOnClickListener {
-            // 저장 버튼 누르지 않으면 끝나고 삭제해줘야함
-            mPhotoSaved = true
-            Toast.makeText(this, "저장 완료 " + photoUri?.path, Toast.LENGTH_LONG).show()
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.setType("image/jpg")
+            intent.putExtra(Intent.EXTRA_TITLE, ".jpg")
+            startActivityForResult(intent, SAVE)
         }
 
         // 올리기 클릭
         binding.todayPictureUpload.setOnClickListener {
             // ChallengeList.json -> LastAdd 오늘 날짜로 업데이트
             // ChallengeActivity -> doneDay을 +1하고 업데이트
-            if(!mPhotoSaved){
-                val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName)
-                imageFile.delete()
-            }
             photoUri = null
             ChallengeActivity.instance.mDoneDay++
             ChallengeActivity.instance.mIsAdd = true
@@ -142,10 +161,8 @@ class TodayPictureActivity : AppCompatActivity() {
 
         // 취소 클릭
         binding.todayPictureCancel.setOnClickListener {
-            if(!mPhotoSaved){
-                val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName + ".jpg")
-                imageFile.delete()
-            }
+            val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName + ".jpg")
+            imageFile.delete()
 
             photoUri = null
             finish()
@@ -157,6 +174,7 @@ class TodayPictureActivity : AppCompatActivity() {
             binding.todayPictureBefore.visibility = View.GONE
             binding.todayPictureAfter.visibility = View.VISIBLE
         } else {
+            binding.todayPicturePreviewImage.setImageDrawable(ContextCompat.getDrawable(applicationContext, android.R.drawable.ic_input_add))
             binding.todayPictureBefore.visibility = View.VISIBLE
             binding.todayPictureAfter.visibility = View.GONE
         }
@@ -169,13 +187,25 @@ class TodayPictureActivity : AppCompatActivity() {
             when(requestCode) {
                 CAPTURE -> {
                     val imageBitmap = photoUri?.let { ImageDecoder.createSource(this.contentResolver, it) }
-                    binding.todayPicturePreviewImage.setImageBitmap(imageBitmap?.let { ImageDecoder.decodeBitmap(it) })
-                    Toast.makeText(this, photoUri?.path, Toast.LENGTH_LONG).show()
-
+                    val bitmap = imageBitmap?.let { ImageDecoder.decodeBitmap(it) }
+                    if (bitmap != null) {
+                        val bitmapNotNull = bitmap.copy(Bitmap.Config.ARGB_8888,true)
+                        val resizedBitmap = Bitmap.createScaledBitmap(bitmapNotNull, 950, 950, true)
+                        binding.todayPicturePreviewImage.setImageBitmap(resizedBitmap)
+                    }
                     mIsAdd = true
                     onAddPicture()
                 }
                 SAVE -> {
+                    val savedUri = data?.data;
+                    val pfd = savedUri?.let { contentResolver.openFileDescriptor(it, "w") }
+                    val fileOutputStream = FileOutputStream(pfd?.fileDescriptor)
+                    val bitmap = binding.todayPicturePreviewImage.drawable.toBitmap(950, 950, null)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+                    fileOutputStream.close()
+
+                    Toast.makeText(this , savedUri.toString(), Toast.LENGTH_LONG).show()
+                    Log.d("saved", savedUri.toString())
 
                 }
             }
@@ -208,28 +238,6 @@ class TodayPictureActivity : AppCompatActivity() {
                 Toast.makeText(this, "권한 승인 부탁드립니다.", Toast.LENGTH_SHORT).show()
                 finish()
             }
-        }
-    }
-
-    private fun newJpgFileName() : String {
-        return "${mTodayPictureName}.jpg"
-    }
-
-    private fun saveBitmapAsJPGFile(bitmap: Bitmap) {
-        val path = File(filesDir, "image")
-        if (!path.exists()) {
-            path.mkdirs()
-        }
-        val file = File(path, newJpgFileName())
-        var imageFile: OutputStream? = null
-        try {
-            file.createNewFile()
-            imageFile = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageFile)
-            imageFile.close()
-            Toast.makeText(this, file.absolutePath, Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            null
         }
     }
 }

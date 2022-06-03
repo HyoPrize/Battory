@@ -50,8 +50,6 @@ class PastPictureActivity : AppCompatActivity() {
             "com.example.battory_app.fileprovider",
             photoFile
         )
-        Log.d("Uri", photoUri.toString())
-        Log.d("photoName", "${mSelectedChallengeIndex.toString()}_${mDay.toString()}.jpg")
         val imageBitmap = photoUri?.let { ImageDecoder.createSource(this.contentResolver, it) }
         val bitmap = imageBitmap?.let { ImageDecoder.decodeBitmap(it) }
         if (bitmap != null) {
