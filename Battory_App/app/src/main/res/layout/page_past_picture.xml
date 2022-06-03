@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:id="@+id/challenge_add_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#D8D8D8"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/challenge_btn_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="#656565"
+            android:insetLeft="15dp"
+            android:insetTop="-5dp"
+            android:insetRight="15dp"
+            android:insetBottom="-5dp"
+            app:backgroundTint="#656565"
+            app:icon="@drawable/icon_home"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="50dp"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/challenge_btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="#656565"
+            android:insetLeft="15dp"
+            android:insetTop="-5dp"
+            android:insetRight="15dp"
+            android:insetBottom="-5dp"
+            app:backgroundTint="#656565"
+            app:icon="@drawable/icon_add"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="50dp"
+            app:iconTint="#303030"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/challenge_btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="#656565"
+            android:insetLeft="15dp"
+            android:insetTop="-5dp"
+            android:insetRight="15dp"
+            android:insetBottom="-5dp"
+            app:backgroundTint="#656565"
+            app:icon="@drawable/icon_delete"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="50dp"
+            app:iconTint="#FFFFFF"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/challenge_btn_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="#656565"
+            android:insetLeft="15dp"
+            android:insetTop="-5dp"
+            android:insetRight="15dp"
+            android:insetBottom="-5dp"
+            app:backgroundTint="#656565"
+            app:icon="@drawable/icon_info"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="50dp"
+            app:iconTint="#FFFFFF"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/challenge_btn_config"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="#656565"
+            android:insetLeft="15dp"
+            android:insetTop="-5dp"
+            android:insetRight="15dp"
+            android:insetBottom="-5dp"
+            app:backgroundTint="#656565"
+            app:icon="@drawable/icon_config"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="50dp"
+            app:iconTint="#FFFFFF"
+            tools:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="58dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/past_picture_name"
+                android:layout_width="400dp"
+                android:layout_height="51dp"
+                android:gravity="center"
+                android:text="%d일차 업로드 사진"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints"
+                tools:visibility="visible"
+                />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="410dp"
+        android:layout_height="571dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="22dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="397dp"
+            android:orientation="horizontal">
+
+
+
+            <ImageView
+                android:id="@+id/past_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dog" />
+
+
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="22dp" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:background="#656565"
+            android:insetLeft="15dp"
+            android:insetTop="-5dp"
+            android:insetRight="15dp"
+            android:insetBottom="-5dp"
+            android:text="돌아가기"
+            app:backgroundTint="#656565"
+            app:icon="@drawable/back"
+            app:iconGravity="textStart"
+            app:iconPadding="1dp"
+            app:iconSize="22dp"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

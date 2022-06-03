@@ -191,7 +191,6 @@ class ZoomableImage : AppCompatImageView, View.OnTouchListener,
                 if (mDragCount < 5 && mCurrentScale == mBeforeScale) {
                     var pt: PointF = PointF()
                     val clickedIndex = getClickedIndex(pt, 50)
-                    Toast.makeText(ChallengeActivity.ApplicationContext(), clickedIndex.toString(), Toast.LENGTH_SHORT).show()
                     ChallengeActivity.instance.onClickPixel(clickedIndex)
                 }
                 mBeforeScale = mCurrentScale

@@ -170,9 +170,16 @@ class ChallengeActivity : AppCompatActivity() {
             Log.d("clickedIndexString", clickedIndexString.toString())
             for(i in 0 until dayPixels.length()) {
                 val pixelIndexString = dayPixels.getString(i)
+                val pixelRGBA = imageData.getJSONArray(pixelIndexString)
+
                 if (clickedIndexString == pixelIndexString) {
-                    // Click!
-                    //binding.challengeName.text = clickedIndex.toString() + " / " + (day+1).toString()+"일 기록"
+                    val intent = Intent(this, PastPictureActivity::class.java)
+                    intent.putExtra("day", day + 1)
+                    intent.putExtra("selectedChallengeIndex", mSelectedChallengeIndex)
+                    intent.putExtra("red", pixelRGBA.getString(0).toInt())
+                    intent.putExtra("green", pixelRGBA.getString(1).toInt())
+                    intent.putExtra("blue", pixelRGBA.getString(2).toInt())
+                    startActivity(intent)
                     return
                 }
             }

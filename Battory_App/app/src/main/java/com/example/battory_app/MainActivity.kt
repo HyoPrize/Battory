@@ -52,16 +52,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mLogin = LoginBinding.inflate(layoutInflater)
 
-        val jsonPath = "${filesDir}/jsons/ChallengeList.json"
-        if (File(jsonPath).exists()) {
-            Log.d("exist", "exist")
-            challengeList = File(jsonPath).reader().readText()
-        } else {
-            // 파일이 없음
-            Log.d("no Exist", "no Exist")
-            challengeList = assets.open("ChallengeList.json").reader().readText()
-            updateChallengeListJson(-1, "")
-        }
+        updateChallengeListJson()
 
         loginData = assets.open("LoginData.json").reader().readText()
         loginDataJsonArray = JSONArray(loginData)
@@ -71,10 +62,6 @@ class MainActivity : AppCompatActivity() {
         jsonPw = loginDataJsonObject.getString("PW")
         jsonSuccess = loginDataJsonObject.getBoolean("Success")
         jsonChallengeExist = loginDataJsonObject.getBoolean("ChallengeExist")
-
-        //challengeList = assets.open("ChallengeList.json").reader().readText()
-        challengeListJsonArray = JSONArray(challengeList)
-        challengeListJsonObject = challengeListJsonArray.getJSONObject(0)
 
         mLastAdd = challengeListJsonObject.getString("LastAdd")
         mDoneDay = challengeListJsonObject.getInt("doneDay")
@@ -171,8 +158,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     public fun updateChallengeListJson(doneDay:Int = -1, lastAdd:String = "") {
-        var challengeList = ""
-
         val jsonPath = "${filesDir}/jsons/ChallengeList.json"
         if (File(jsonPath).exists()) {
             challengeList = File(jsonPath).reader().readText()
@@ -180,8 +165,8 @@ class MainActivity : AppCompatActivity() {
             challengeList = assets.open("ChallengeList.json").reader().readText()
         }
 
-        val challengeListJsonArray = JSONArray(challengeList)
-        val challengeListJsonObject = challengeListJsonArray.getJSONObject(mSelectedChallengeIndex)
+        challengeListJsonArray = JSONArray(challengeList)
+        challengeListJsonObject = challengeListJsonArray.getJSONObject(mSelectedChallengeIndex)
 
         if(doneDay != -1)
             challengeListJsonArray.getJSONObject(mSelectedChallengeIndex).put("doneDay", doneDay)
