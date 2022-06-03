@@ -1,11 +1,30 @@
 package com.example.battory_app
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
-import android.opengl.Visibility
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.example.battory_app.databinding.PageTodayPictureBinding
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TodayPictureActivity : AppCompatActivity() {
     init {
@@ -22,8 +41,28 @@ class TodayPictureActivity : AppCompatActivity() {
     private var mBinding: PageTodayPictureBinding? = null
     private val binding get() = mBinding!!
 
-    private var mToday: Int = 0
+    private var mToday = 0
+    private var mSelectedChallengeIndex = 0
     private var mIsAdd = false
+
+    // Permisisons
+    private val PERMISSIONS = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        //Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+
+    val PERMISSIONS_REQUEST = 100
+
+    // Request Code
+    private val CAPTURE = 100
+    private val SAVE = 200
+
+    // 원본 url
+    private var photoUri: Uri? = null
+
+    private var mPhotoSaved = false
+    private var mTodayPictureName = ""
 
     // 사진이 들어간 상태로 들어오는 경우는 없음
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,34 +71,84 @@ class TodayPictureActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         mToday = intent.getIntExtra("today", 0)
+        mSelectedChallengeIndex = intent.getIntExtra("selectedChallengeIndex", 0)
         binding.todayPictureName.text = "오늘의 사진 (%d 일차)".format(mToday)
+        mTodayPictureName = mSelectedChallengeIndex.toString() + "_" + mToday.toString()
 
         onAddPicture()
 
         // 사진 찍기 클릭
         binding.todayPictureCapture.setOnClickListener {
-            mIsAdd = true
-            onAddPicture()
+            checkPermissions(PERMISSIONS, PERMISSIONS_REQUEST)
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val photoFile = File(
+                File("${filesDir}/image").apply{
+                    if(!this.exists()){
+                        this.mkdirs()
+                    }
+                },
+                newJpgFileName()
+            )
+            photoUri = FileProvider.getUriForFile(
+                this,
+                "com.example.battory_app.fileprovider",
+                photoFile
+            )
+            takePictureIntent.resolveActivity(packageManager)?.also{
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                startActivityForResult(takePictureIntent, CAPTURE)
+            }
         }
 
         // 다시 찍기 클릭
         binding.todayPictureReCapture.setOnClickListener {
-
+            if(!mPhotoSaved){
+                val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName)
+                imageFile.delete()
+            }
+            photoUri = null
+            mIsAdd = false
+            onAddPicture()
         }
 
         // 사진 저장 클릭
         binding.todayPictureSave.setOnClickListener {
-
+            // 저장 버튼 누르지 않으면 끝나고 삭제해줘야함
+            mPhotoSaved = true
+            Toast.makeText(this, "저장 완료 " + photoUri?.path, Toast.LENGTH_LONG).show()
         }
 
         // 올리기 클릭
         binding.todayPictureUpload.setOnClickListener {
+            // ChallengeList.json -> LastAdd 오늘 날짜로 업데이트
+            // ChallengeActivity -> doneDay을 +1하고 업데이트
+            if(!mPhotoSaved){
+                val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName)
+                imageFile.delete()
+            }
+            photoUri = null
+            ChallengeActivity.instance.mDoneDay++
+            ChallengeActivity.instance.mIsAdd = true
 
+            val now = System.currentTimeMillis()
+            val date = Date(now)
+            val sdf = SimpleDateFormat("yyyy.MM.dd")
+            val today: String = sdf.format(date)
+
+            MainActivity.instance.updateChallengeListJson(ChallengeActivity.instance.mDoneDay, today)
+            ChallengeActivity.instance.updateActivity()
+            finish()
         }
 
         // 취소 클릭
         binding.todayPictureCancel.setOnClickListener {
+            if(!mPhotoSaved){
+                val imageFile = File(filesDir.toString() + "/image/" + mTodayPictureName + ".jpg")
+                imageFile.delete()
+            }
 
+            photoUri = null
+            finish()
         }
     }
 
@@ -70,6 +159,77 @@ class TodayPictureActivity : AppCompatActivity() {
         } else {
             binding.todayPictureBefore.visibility = View.VISIBLE
             binding.todayPictureAfter.visibility = View.GONE
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK){
+            when(requestCode) {
+                CAPTURE -> {
+                    val imageBitmap = photoUri?.let { ImageDecoder.createSource(this.contentResolver, it) }
+                    binding.todayPicturePreviewImage.setImageBitmap(imageBitmap?.let { ImageDecoder.decodeBitmap(it) })
+                    Toast.makeText(this, photoUri?.path, Toast.LENGTH_LONG).show()
+
+                    mIsAdd = true
+                    onAddPicture()
+                }
+                SAVE -> {
+
+                }
+            }
+        }
+    }
+
+    private fun checkPermissions(permissions: Array<String>, permissionsRequest: Int): Boolean {
+        val permissionList : MutableList<String> = mutableListOf()
+        for(permission in permissions){
+            val result = ContextCompat.checkSelfPermission(this, permission)
+            if(result != PackageManager.PERMISSION_GRANTED){
+                permissionList.add(permission)
+            }
+        }
+        if(permissionList.isNotEmpty()){
+            ActivityCompat.requestPermissions(this, permissionList.toTypedArray(), PERMISSIONS_REQUEST)
+            return false
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        for(result in grantResults){
+            if(result != PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "권한 승인 부탁드립니다.", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+    }
+
+    private fun newJpgFileName() : String {
+        return "${mTodayPictureName}.jpg"
+    }
+
+    private fun saveBitmapAsJPGFile(bitmap: Bitmap) {
+        val path = File(filesDir, "image")
+        if (!path.exists()) {
+            path.mkdirs()
+        }
+        val file = File(path, newJpgFileName())
+        var imageFile: OutputStream? = null
+        try {
+            file.createNewFile()
+            imageFile = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageFile)
+            imageFile.close()
+            Toast.makeText(this, file.absolutePath, Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            null
         }
     }
 }

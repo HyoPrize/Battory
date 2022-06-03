@@ -175,7 +175,7 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/today_picture_preview_image"
                 android:layout_width="950px"
                 android:layout_height="950px"
                 android:layout_weight="1"

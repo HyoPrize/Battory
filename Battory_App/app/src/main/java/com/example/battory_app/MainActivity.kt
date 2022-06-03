@@ -1,5 +1,6 @@
 package com.example.battory_app
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -8,32 +9,75 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.battory_app.databinding.LoginBinding
 import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+    init {
+        instance = this
+    }
+
+    companion object {
+        lateinit var instance: MainActivity
+        fun ApplicationContext() : Context {
+            return instance.applicationContext
+        }
+    }
+
     val TAG: String = "MainActivity"
 
     private var mLogin: LoginBinding? = null
     private val Login get() = mLogin!!
 
+    private var loginData = ""
+    private var loginDataJsonArray = JSONArray()
+    private var loginDataJsonObject = JSONObject()
+
+    private var jsonId = ""
+    private var jsonPw = ""
+    private var jsonSuccess = false
+    private var jsonChallengeExist = false
+
+    private var challengeList = ""
+    private var challengeListJsonArray = JSONArray()
+    private var challengeListJsonObject = JSONObject()
+
+    private var mLastAdd = ""
+    private var mDoneDay = -1
+    private var mSelectedChallengeIndex = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mLogin = LoginBinding.inflate(layoutInflater)
 
-        val loginData = assets.open("LoginData.json").reader().readText()
-        val loginDataJsonArray = JSONArray(loginData)
-        val loginDataJsonObject = loginDataJsonArray.getJSONObject(0)
+        val jsonPath = "${filesDir}/jsons/ChallengeList.json"
+        if (File(jsonPath).exists()) {
+            Log.d("exist", "exist")
+            challengeList = File(jsonPath).reader().readText()
+        } else {
+            // 파일이 없음
+            Log.d("no Exist", "no Exist")
+            challengeList = assets.open("ChallengeList.json").reader().readText()
+            updateChallengeListJson(-1, "")
+        }
 
-        var jsonId = loginDataJsonObject.getString("ID")
-        var jsonPw = loginDataJsonObject.getString("PW")
-        var jsonSuccess = loginDataJsonObject.getBoolean("Success")
-        var jsonChallengeExist = loginDataJsonObject.getBoolean("ChallengeExist")
+        loginData = assets.open("LoginData.json").reader().readText()
+        loginDataJsonArray = JSONArray(loginData)
+        loginDataJsonObject = loginDataJsonArray.getJSONObject(0)
 
-        val challengeList = assets.open("ChallengeList.json").reader().readText()
-        val challengeListJsonArray = JSONArray(challengeList)
-        val challengeListJsonObject = challengeListJsonArray.getJSONObject(0)
-        var lastAdd = challengeListJsonObject.getString("LastAdd")
+        jsonId = loginDataJsonObject.getString("ID")
+        jsonPw = loginDataJsonObject.getString("PW")
+        jsonSuccess = loginDataJsonObject.getBoolean("Success")
+        jsonChallengeExist = loginDataJsonObject.getBoolean("ChallengeExist")
+
+        //challengeList = assets.open("ChallengeList.json").reader().readText()
+        challengeListJsonArray = JSONArray(challengeList)
+        challengeListJsonObject = challengeListJsonArray.getJSONObject(0)
+
+        mLastAdd = challengeListJsonObject.getString("LastAdd")
+        mDoneDay = challengeListJsonObject.getInt("doneDay")
 
         if (!jsonSuccess){
             setContentView(Login.root)
@@ -41,7 +85,15 @@ class MainActivity : AppCompatActivity() {
         else {
             if(jsonChallengeExist)
             {
+                val now = System.currentTimeMillis()
+                val date = Date(now)
+                val sdf = SimpleDateFormat("yyyy.MM.dd")
+                val today: String = sdf.format(date)
+
                 val intent = Intent(this, ChallengeActivity::class.java)
+                intent.putExtra("isAdd", today == mLastAdd)
+                intent.putExtra("selectedChallengeIndex", 0)
+                intent.putExtra("doneDay", mDoneDay)
                 startActivity(intent)
             }
             else
@@ -68,7 +120,9 @@ class MainActivity : AppCompatActivity() {
                     val today: String = sdf.format(date)
 
                     val intent = Intent(this, ChallengeActivity::class.java)
-                    intent.putExtra("isAdd", today == lastAdd)
+                    intent.putExtra("isAdd", today == mLastAdd)
+                    intent.putExtra("selectedChallengeIndex", 0)
+                    intent.putExtra("doneDay", mDoneDay)
                     startActivity(intent)
                 }
                 else
@@ -114,5 +168,26 @@ class MainActivity : AppCompatActivity() {
 
         dialog.setPositiveButton("확인",dialog_listener)
         dialog.show()
+    }
+
+    public fun updateChallengeListJson(doneDay:Int = -1, lastAdd:String = "") {
+        val challengeList = assets.open("ChallengeList.json").reader().readText()
+        val challengeListJsonArray = JSONArray(challengeList)
+        val challengeListJsonObject = challengeListJsonArray.getJSONObject(mSelectedChallengeIndex)
+
+        if(doneDay != -1)
+            challengeListJsonArray.getJSONObject(mSelectedChallengeIndex).put("doneDay", doneDay)
+        if(lastAdd != "")
+            challengeListJsonArray.getJSONObject(mSelectedChallengeIndex).put("LastAdd", lastAdd)
+
+        val challengeListJsonPath = "${filesDir}/jsons"
+        File(
+            File(challengeListJsonPath).apply{
+                if(!this.exists()){
+                    this.mkdirs()
+                }
+            },
+            "ChallengeList.json"
+        ).printWriter().use { out -> out.println(challengeListJsonArray.toString()) }
     }
 }
