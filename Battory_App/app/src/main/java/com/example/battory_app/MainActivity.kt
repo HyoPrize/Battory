@@ -171,7 +171,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     public fun updateChallengeListJson(doneDay:Int = -1, lastAdd:String = "") {
-        val challengeList = assets.open("ChallengeList.json").reader().readText()
+        var challengeList = ""
+
+        val jsonPath = "${filesDir}/jsons/ChallengeList.json"
+        if (File(jsonPath).exists()) {
+            challengeList = File(jsonPath).reader().readText()
+        } else {
+            challengeList = assets.open("ChallengeList.json").reader().readText()
+        }
+
         val challengeListJsonArray = JSONArray(challengeList)
         val challengeListJsonObject = challengeListJsonArray.getJSONObject(mSelectedChallengeIndex)
 
