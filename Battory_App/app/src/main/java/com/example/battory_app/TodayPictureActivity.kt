@@ -65,6 +65,7 @@ class TodayPictureActivity : AppCompatActivity() {
     private var mTodayPictureName = ""
 
     // 사진이 들어간 상태로 들어오는 경우는 없음
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = PageTodayPictureBinding.inflate(layoutInflater)

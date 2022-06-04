@@ -3,9 +3,12 @@ package com.example.battory_app
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.example.battory_app.databinding.ChallengeBinding
 import org.json.JSONArray
 import org.json.JSONObject
@@ -40,6 +43,7 @@ class ChallengeActivity : AppCompatActivity() {
     public var mSelectedChallengeIndex = -1
     public var mDoneDay = 0
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ChallengeBinding.inflate(layoutInflater)
@@ -100,13 +104,14 @@ class ChallengeActivity : AppCompatActivity() {
     }
 
     // Draw Bitmap
+    @RequiresApi(Build.VERSION_CODES.P)
     public fun updateActivity() {
         val bitmap: Bitmap = Bitmap.createBitmap(950, 1000, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
         // doneDay만큼 json에서 픽셀 읽어서 그리기
-        for (i in 0 until mDoneDay) {
-            val dayPixels = imagePixelPerDay.getJSONArray((i+1).toString())
+        for (day in 0 until mDoneDay) {
+            val dayPixels = imagePixelPerDay.getJSONArray((day+1).toString())
             for(j in 0 until dayPixels.length()) {
                 val pixelIndexString = dayPixels.getString(j)
                 val pixelIndex = pixelIndexString.split(',')
@@ -116,16 +121,42 @@ class ChallengeActivity : AppCompatActivity() {
                     pixelIndex[1].toInt() * 50,
                     pixelIndex[0].toInt() * 50 + 50,
                     pixelIndex[1].toInt() * 50 + 50)
-                val paint = Paint()
-                paint.color = Color.rgb(pixelRGBA.getString(0).toInt(), pixelRGBA.getString(1).toInt(), pixelRGBA.getString(2).toInt())
-                canvas.drawRect(drawRect, paint)
+                val photoFile = File(
+                    File("${filesDir}/image").apply{
+                        if(!this.exists()){
+                            this.mkdirs()
+                        }
+                    },
+                    "${mSelectedChallengeIndex.toString()}_${(day+1).toString()}.jpg"
+                )
+                val photoUri = FileProvider.getUriForFile(
+                    this,
+                    "com.example.battory_app.fileprovider",
+                    photoFile
+                )
+
+                val imageBitmap = photoUri?.let { ImageDecoder.createSource(this.contentResolver, it) }
+                val bitmap = imageBitmap?.let { ImageDecoder.decodeBitmap(it) }
+                if (bitmap != null) {
+                    val bitmapNotNull = bitmap.copy(Bitmap.Config.ARGB_8888,true)
+                    val resizedBitmap = Bitmap.createScaledBitmap(bitmapNotNull,50, 50, true)
+                    val paint = Paint()
+                    val colorFilter: ColorFilter = PorterDuffColorFilter(Color.rgb(
+                        pixelRGBA.getString(0).toInt(),
+                        pixelRGBA.getString(1).toInt(),
+                        pixelRGBA.getString(2).toInt()), PorterDuff.Mode.OVERLAY)
+                    paint.colorFilter = colorFilter
+
+                    val src = Rect(0,0, resizedBitmap.width, resizedBitmap.height)
+                    canvas.drawBitmap(resizedBitmap, src, drawRect, paint)
+                }
             }
         }
         // 오늘 칠할 수 있는 픽셀 강조 시키기
         if(!mIsAdd && mDoneDay <= imageInfo.getString("total_day").toInt()) {
             val dayPixels = imagePixelPerDay.getJSONArray((mDoneDay+1).toString())
-            for(i in 0 until dayPixels.length()) {
-                val pixelIndexString = dayPixels.getString(i)
+            for(day in 0 until dayPixels.length()) {
+                val pixelIndexString = dayPixels.getString(day)
                 val pixelIndex = pixelIndexString.split(',')
                 //val pixelRGBA = imageData.getJSONArray(pixelIndexString)
 
