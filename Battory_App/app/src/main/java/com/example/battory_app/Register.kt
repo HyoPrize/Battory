@@ -9,6 +9,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.battory_app.databinding.JoinMembershipBinding
+import org.json.JSONArray
+import java.io.File
 
 class Register : AppCompatActivity() {
     val TAG: String = "Register"
@@ -17,6 +19,7 @@ class Register : AppCompatActivity() {
 
     private var mJoinMembership: JoinMembershipBinding? = null;
     private val joinMembership get() = mJoinMembership!!
+    private var mLoginIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +27,11 @@ class Register : AppCompatActivity() {
         mJoinMembership = JoinMembershipBinding.inflate(layoutInflater)
 
         setContentView(joinMembership.root)
+
+        joinMembership.btnJoinCancel.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         joinMembership.btnJoin.setOnClickListener {
             val id = joinMembership.joinInputId.text.toString()
@@ -43,13 +51,7 @@ class Register : AppCompatActivity() {
             if(!isExistBlank && isPWSame){
                 // 회원가입 성공 토스트 메세지 띄우기
                 Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
-
-                // 유저가 입력한 id, pw를 쉐어드에 저장한다.
-                val sharedPreference = getSharedPreferences("file name", Context.MODE_PRIVATE)
-                val editor = sharedPreference.edit()
-                editor.putString("id", id)
-                editor.putString("pw", pw)
-                editor.apply()
+                updateLoginDataJson(id,pw)
 
                 // 로그인 화면으로 이동
                 val intent = Intent(this, MainActivity::class.java)
@@ -95,5 +97,32 @@ class Register : AppCompatActivity() {
 
         dialog.setPositiveButton("확인",dialog_listener)
         dialog.show()
+    }
+
+    public fun updateLoginDataJson(id:String = "", pw:String = "") {
+        var loginData = ""
+
+        val jsonPath = "${filesDir}/jsons/LoginData.json"
+        if (File(jsonPath).exists()) {
+            loginData = File(jsonPath).reader().readText()
+        } else {
+            loginData = assets.open("LoginData.json").reader().readText()
+        }
+
+        val LoginDataJsonArray = JSONArray(loginData)
+        val LoginDataJsonObject = LoginDataJsonArray.getJSONObject(mLoginIndex)
+
+        LoginDataJsonArray.getJSONObject(mLoginIndex).put("ID", id)
+        LoginDataJsonArray.getJSONObject(mLoginIndex).put("PW", pw)
+
+        val LoginDataJsonPath = "${filesDir}/jsons"
+        File(
+            File(LoginDataJsonPath).apply{
+                if(!this.exists()){
+                    this.mkdirs()
+                }
+            },
+            "LoginData.json"
+        ).printWriter().use { out -> out.println(LoginDataJsonArray.toString()) }
     }
 }

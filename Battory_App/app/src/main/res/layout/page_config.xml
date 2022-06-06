@@ -6,6 +6,35 @@
     android:layout_height="match_parent"
     android:visibility="visible">
 
+    <Button
+        android:id="@+id/btn_config_delete"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:text="로그아웃"
+        android:visibility="visible"
+        app:backgroundTint="#717171"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_config_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_config_cancel"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btn_config_cancel"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="28dp"
+        android:text="탈퇴하기"
+        android:visibility="visible"
+        app:backgroundTint="#BDBDBD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.933"
+        app:layout_constraintStart_toEndOf="@+id/btn_config_delete" />
+
     <LinearLayout
         android:id="@+id/config_appbar"
         android:layout_width="match_parent"

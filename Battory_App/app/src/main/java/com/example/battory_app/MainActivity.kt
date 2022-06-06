@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private var mLogin: LoginBinding? = null
     private val Login get() = mLogin!!
 
-    private var loginData = ""
+
     private var loginDataJsonArray = JSONArray()
     private var loginDataJsonObject = JSONObject()
 
@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var jsonChallengeExist = false
 
     private var challengeList = ""
+    private var LoginData = ""
     private var challengeListJsonArray = JSONArray()
     private var challengeListJsonObject = JSONObject()
 
@@ -53,9 +54,18 @@ class MainActivity : AppCompatActivity() {
         mLogin = LoginBinding.inflate(layoutInflater)
 
         updateChallengeListJson()
+        val jsonLoginDataPath = "${filesDir}/jsons/LoginData.json"
 
-        loginData = assets.open("LoginData.json").reader().readText()
-        loginDataJsonArray = JSONArray(loginData)
+        if (File(jsonLoginDataPath).exists()) {
+            Log.d("exist LoginData.json", "exist LoginData.json")
+            LoginData = File(jsonLoginDataPath).reader().readText()
+        } else {
+            // 파일이 없음
+            Log.d("no Exist LoginData.json", "no Exist LoginData.json")
+            LoginData = assets.open("LoginData.json").reader().readText()
+        }
+
+        loginDataJsonArray = JSONArray(LoginData)
         loginDataJsonObject = loginDataJsonArray.getJSONObject(0)
 
         jsonId = loginDataJsonObject.getString("ID")
@@ -98,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                 // 로그인 성공 다이얼로그 보여주기
                 dialog("login_success")
                 loginDataJsonObject.put("Success", true)
+                updateSuccessDataJson(true)
 
                 if(jsonChallengeExist)
                 {
@@ -119,6 +130,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             else{
+                updateSuccessDataJson(false)
                 // 로그인 실패 다이얼로그 보여주기
                 dialog("login_fail")
             }
@@ -155,6 +167,32 @@ class MainActivity : AppCompatActivity() {
 
         dialog.setPositiveButton("확인",dialog_listener)
         dialog.show()
+    }
+
+    public fun updateSuccessDataJson(success:Boolean = false) {
+        var loginData = ""
+
+        val jsonPath = "${filesDir}/jsons/LoginData.json"
+        if (File(jsonPath).exists()) {
+            loginData = File(jsonPath).reader().readText()
+        } else {
+            loginData = assets.open("LoginData.json").reader().readText()
+        }
+
+        val LoginDataJsonArray = JSONArray(loginData)
+        val LoginDataJsonObject = LoginDataJsonArray.getJSONObject(mSelectedChallengeIndex)
+
+        LoginDataJsonArray.getJSONObject(mSelectedChallengeIndex).put("Success", success)
+
+        val LoginDataJsonPath = "${filesDir}/jsons"
+        File(
+            File(LoginDataJsonPath).apply{
+                if(!this.exists()){
+                    this.mkdirs()
+                }
+            },
+            "LoginData.json"
+        ).printWriter().use { out -> out.println(LoginDataJsonArray.toString()) }
     }
 
     public fun updateChallengeListJson(doneDay:Int = -1, lastAdd:String = "") {
